@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wallet-service-rates
+  labels:
+    app: wallet-service-rates
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: wallet-service-rates
+  template:
+    metadata:
+      labels:
+        app: wallet-service-rates
+    spec:
+      containers:
+      - image: registry.hub.docker.com/owstack/wallet-service:v0.1.1
+        name: wallet-service-rates
+        command: ["node", "base-service/fiatrateservice/fiatrateservice.js"]
+        env:
+        - name: DB_CONN_STRING
+          value: mongodb://mongo-0.mongo:27017,mongo-1.mongo:27017,mongo-2.mongo:27017/wallet-service?replicaSet=rs0

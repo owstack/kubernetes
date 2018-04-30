@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: wallet-service-wallets
+  labels:
+    app: wallet-service-wallets
+  annotations:
+    getambassador.io/config: |
+      ---
+      apiVersion: ambassador/v0
+      kind:  Mapping
+      name:  wallet-service_mapping
+      prefix: /api/ws
+      rewrite: /ws/api
+      service: wallet-service-wallets:3232
+      cors:
+        origins: "*"
+        headers: x-signature,x-identity,x-session,x-client-version,x-wallet-id,X-Requested-With,Content-Type,Authorization
+        methods: GET,POST,OPTIONS,PUT,DELETE
+spec:
+  ports:
+  - name: port-1
+    port: 3232
+    protocol: TCP
+    targetPort: 3232
+  selector:
+    app: wallet-service-wallets
+  type: ClusterIP

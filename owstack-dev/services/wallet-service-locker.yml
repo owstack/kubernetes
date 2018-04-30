@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: wallet-service-locker
+  labels:
+    app: wallet-service-locker
+spec:
+  ports:
+  - name: port-1
+    port: 3231
+    protocol: TCP
+    targetPort: 3231
+  selector:
+    app: wallet-service-locker
+  type: ClusterIP

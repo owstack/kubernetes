@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wallet-service-chain-ltc
+  labels:
+    app: wallet-service-chain-ltc
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: wallet-service-chain-ltc
+  template:
+    metadata:
+      labels:
+        app: wallet-service-chain-ltc
+    spec:
+      containers:
+      - image: registry.hub.docker.com/owstack/wallet-service:v0.1.1
+        name: wallet-service-chain-ltc
+        command: ["node", "ltc-service/blockchainmonitor/blockchainmonitor.js"]
+        env:
+        - name: DB_CONN_STRING
+          value: mongodb://mongo-0.mongo:27017,mongo-1.mongo:27017,mongo-2.mongo:27017/wallet-service?replicaSet=rs0
+        - name: MESSAGE_BROKER_URL
+          value: http://wallet-service-messenger:3380
+        - name: LOCKER_SERVER_NAME
+          value: wallet-service-locker

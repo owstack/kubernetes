@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wallet-service-messenger
+  labels:
+    app: wallet-service-messenger
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: wallet-service-messenger
+  template:
+    metadata:
+      labels:
+        app: wallet-service-messenger
+    spec:
+      containers:
+      - image: registry.hub.docker.com/owstack/wallet-service:v0.1.1
+        name: wallet-service-messenger
+        command: ["node", "base-service/messagebroker/messagebroker.js"]
+        ports:
+        - containerPort: 3380
+        env:
+        - name: DB_CONN_STRING
+          value: mongodb://mongo-0.mongo:27017,mongo-1.mongo:27017,mongo-2.mongo:27017/wallet-service?replicaSet=rs0

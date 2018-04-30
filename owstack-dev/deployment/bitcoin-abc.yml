@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: bitcoin-abc
+spec:
+  serviceName: "bitcoin-abc"
+  selector:
+    matchLabels:
+      app: bitcoin-abc
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: bitcoin-abc
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+      - image: registry.hub.docker.com/owstack/bitcoin-abc:0.18.2-ows
+        name: bitcoin-abc
+        command: ["bitcoind", "-datadir=/data", "-server=1", "-addressindex=1", "-spentindex=1", "-timestampindex=1", "-txindex=1", "-zmqpubrawtx=tcp://0.0.0.0:28332", "-zmqpubhashblock=tcp://0.0.0.0:28332", "-rpcallowip=0.0.0.0/0", "-rpcuser=\"$RPCUSERNAME\"", "-rpcpassword=\"$RPCPASSWORD\"", "-dbcache=512", "-rpcthreads=16", "-rest=1", "-printtoconsole"]
+        ports:
+        - containerPort: 8332
+        - containerPort: 8333
+        - containerPort: 28332
+        env:
+        - name: RPCUSERNAME
+          valueFrom:
+            secretKeyRef:
+              name: rpcsecret
+              key: username
+        - name: RPCPASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: rpcsecret
+              key: password
+        volumeMounts:
+        - mountPath: /data
+          name: bitcoin-abc-persistent-storage
+      securityContext:
+        runAsUser: 1000
+        fsGroup: 1000
+  volumeClaimTemplates:
+  - metadata:
+      name: bitcoin-abc-persistent-storage
+    spec:
+      storageClassName: ssd
+      accessModes: [ ReadWriteOnce ]
+      resources:
+        requests:
+          storage: 600Gi

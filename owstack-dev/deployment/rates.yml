@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rate-service
+  labels:
+    app: rate-service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: rate-service
+  template:
+    metadata:
+      labels:
+        app: rate-service
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: "role"
+                    operator: In
+                    values:
+                    - rate-service
+              topologyKey: "kubernetes.io/hostname"
+      containers:
+      - image: registry.hub.docker.com/owstack/rate-service:v1.1.8
+        name: rate-service
+        env:
+        - name: OER_APP_ID
+          valueFrom:
+            secretKeyRef:
+              name: oerkey
+              key: oerkey
+        command: ["npm", "start"]
+        ports:
+        - containerPort: 3000

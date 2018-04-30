@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: rate-service
+  labels:
+    app: rate-service
+  annotations:
+    getambassador.io/config: |
+      ---
+      apiVersion: ambassador/v0
+      kind:  Mapping
+      name:  rate-service_mapping
+      prefix: /api/rates/
+      rewrite: /
+      service: rate-service:80
+      cors:
+        origins: "*"
+spec:
+  ports:
+  - name: port-1
+    port: 80
+    protocol: TCP
+    targetPort: 3000
+  selector:
+    app: rate-service
+  type: ClusterIP
