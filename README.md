@@ -94,7 +94,10 @@ kubectl apply -f cert-manager/certificate.yml
 #### 2. Setup ACME challenge service
 ./scripts/addAcmeDomainAndToken.sh YOUR_DOMAIN_ID YOUR_DOMAIN_TOKEN | kubectl apply -f -
 
-#### 3. Enable TLS in Ambassador
+#### 3. Verify ambassador-certs secret exists
+kubectl get secrets
+
+#### 4. Enable TLS in Ambassador
 kubectl patch service ambassador -p "{\"metadata\":{\"annotations\":{\"date\":\"`date +'%s'`\",\"getambassador.io/config\":\"---\\napiVersion: ambassador/v0\\nkind:  Module\\nname:  tls\\nconfig:\\n  server:\\n    enabled: True\\n    redirect_cleartext_from: 80\\n\"}},\"spec\":{\"ports\":[{\"name\":\"http\",\"port\":80,\"protocol\":\"TCP\",\"targetPort\":80},{\"name\":\"https\",\"port\":443,\"protocol\":\"TCP\",\"targetPort\":443}]}}"
 ```
 
