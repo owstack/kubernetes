@@ -1,4 +1,10 @@
-# OWStack on GKE with Ambassador API Gateway
+# OWStack on GKE
+
+Features:
+- Deploy OWStack to Kubernetes on Google Cloud
+- Ambassador API Gateway to expose micro-services as public routes behind a single IP
+- SSL Cert automation for Ambassador via cert-manager and letsencrypt.org
+- Highly-available, redundant, load-balanced services
 
 ## GKE Setup
 
