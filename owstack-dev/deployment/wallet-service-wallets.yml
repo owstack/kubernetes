@@ -25,3 +25,15 @@ spec:
           value: http://wallet-service-messenger:3380
         - name: LOCKER_SERVER_NAME
           value: wallet-service-locker
+        - name: BTC_LIVENET_EXPLORER_API
+          value: http://btc-explorer-api
+        - name: BTC_LIVENET_EXPLORER_API_PATH
+          value: /
+        - name: BCH_LIVENET_EXPLORER_API
+          value: http://bch-explorer-api
+        - name: BCH_LIVENET_EXPLORER_API_PATH
+          value: /
+        - name: LTC_LIVENET_EXPLORER_API
+          value: http://ltc-explorer-api
+        - name: LTC_LIVENET_EXPLORER_API_PATH
+          value: /

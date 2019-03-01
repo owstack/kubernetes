@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bch-explorer-api
+  labels:
+    app: bch-explorer-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bch-explorer-api
+  template:
+    metadata:
+      labels:
+        app: bch-explorer-api
+    spec:
+      containers:
+      - image: registry.hub.docker.com/owstack/explorer-api:v1.0.16
+        name: bch-explorer-api
+        env:
+        - name: CURRENCY
+          value: BCH
+        - name: PROXY_PATH
+          value: /api/explorer/bch
+        - name: EXTERNAL_HOSTNAME
+          value: dev.owstack.org
+        - name: EXTERNAL_PORT
+          value: "443"
+        - name: RPCHOSTS
+          value: "1"
+        - name: RPCHOST_BASE
+          value: "bitcoin-abc"
+        - name: RPCUSERNAME
+          valueFrom:
+            secretKeyRef:
+              name: rpcsecret
+              key: username
+        - name: RPCPASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: rpcsecret
+              key: password
+        command: ["npm", "start"]
+        ports:
+        - containerPort: 3000

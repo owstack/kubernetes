@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bch-explorer-ui
+  labels:
+    app: bch-explorer-ui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bch-explorer-ui
+  template:
+    metadata:
+      labels:
+        app: bch-explorer-ui
+    spec:
+      containers:
+      - image: registry.hub.docker.com/owstack/ows-explorer:v1.0.0
+        name: bch-explorer-ui
+        env:
+        - name: PROXY_PATH
+          value: /explorer/bch
+        - name: EXPLORER_API_URL
+          value: https://dev.owstack.org
+        - name: EXPLORER_API_PROXY_PATH
+          value: /api/explorer/bch
+        command: ["npm", "start"]
+        ports:
+        - containerPort: 3000

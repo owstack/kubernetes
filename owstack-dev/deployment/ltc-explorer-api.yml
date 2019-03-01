@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ltc-explorer-api
+  labels:
+    app: ltc-explorer-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ltc-explorer-api
+  template:
+    metadata:
+      labels:
+        app: ltc-explorer-api
+    spec:
+      containers:
+      - image: registry.hub.docker.com/owstack/explorer-api:v1.0.16
+        name: ltc-explorer-api
+        env:
+        - name: CURRENCY
+          value: LTC
+        - name: PROXY_PATH
+          value: /api/explorer/ltc
+        - name: EXTERNAL_HOSTNAME
+          value: dev.owstack.org
+        - name: EXTERNAL_PORT
+          value: "443"
+        - name: RPCHOSTS
+          value: "1"
+        - name: RPCPORT
+          value: "9332"
+        - name: RPCHOST_BASE
+          value: "litecoin"
+        - name: RPCUSERNAME
+          valueFrom:
+            secretKeyRef:
+              name: rpcsecret
+              key: username
+        - name: RPCPASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: rpcsecret
+              key: password
+        command: ["npm", "start"]
+        ports:
+        - containerPort: 3000

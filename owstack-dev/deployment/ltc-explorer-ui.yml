@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ltc-explorer-ui
+  labels:
+    app: ltc-explorer-ui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ltc-explorer-ui
+  template:
+    metadata:
+      labels:
+        app: ltc-explorer-ui
+    spec:
+      containers:
+      - image: registry.hub.docker.com/owstack/ows-explorer:v1.0.0
+        name: ltc-explorer-ui
+        env:
+        - name: PROXY_PATH
+          value: /explorer/ltc
+        - name: EXPLORER_API_URL
+          value: https://dev.owstack.org
+        - name: EXPLORER_API_PROXY_PATH
+          value: /api/explorer/ltc
+        command: ["npm", "start"]
+        ports:
+        - containerPort: 3000

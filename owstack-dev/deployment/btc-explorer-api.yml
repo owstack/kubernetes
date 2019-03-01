@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: btc-explorer-api
+  labels:
+    app: btc-explorer-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: btc-explorer-api
+  template:
+    metadata:
+      labels:
+        app: btc-explorer-api
+    spec:
+      containers:
+      - image: registry.hub.docker.com/owstack/explorer-api:v1.0.16
+        name: btc-explorer-api
+        env:
+        - name: PROXY_PATH
+          value: /api/explorer/btc
+        - name: EXTERNAL_HOSTNAME
+          value: dev.owstack.org
+        - name: EXTERNAL_PORT
+          value: "443"
+        - name: RPCHOSTS
+          value: "1"
+        - name: RPCUSERNAME
+          valueFrom:
+            secretKeyRef:
+              name: rpcsecret
+              key: username
+        - name: RPCPASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: rpcsecret
+              key: password
+        command: ["npm", "start"]
+        ports:
+        - containerPort: 3000

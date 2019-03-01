@@ -17,7 +17,8 @@ spec:
       containers:
       - image: registry.hub.docker.com/owstack/bitcoin-abc:0.18.2-ows
         name: bitcoin-abc
-        command: ["bitcoind", "-datadir=/data", "-server=1", "-addressindex=1", "-spentindex=1", "-timestampindex=1", "-txindex=1", "-zmqpubrawtx=tcp://0.0.0.0:28332", "-zmqpubhashblock=tcp://0.0.0.0:28332", "-rpcallowip=0.0.0.0/0", "-rpcuser=\"$RPCUSERNAME\"", "-rpcpassword=\"$RPCPASSWORD\"", "-dbcache=512", "-rpcthreads=16", "-rest=1", "-printtoconsole"]
+        command: ["bitcoind"]
+        args: ["-datadir=/data", "-server=1", "-addressindex=1", "-spentindex=1", "-timestampindex=1", "-txindex=1", "-zmqpubrawtx=tcp://0.0.0.0:28332", "-zmqpubhashblock=tcp://0.0.0.0:28332", "-rpcallowip=0.0.0.0/0", "-rpcuser=$(RPCUSERNAME)", "-rpcpassword=$(RPCPASSWORD)", "-dbcache=512", "-rpcthreads=32", "-rest=1", "-printtoconsole"]
         ports:
         - containerPort: 8332
         - containerPort: 8333

@@ -10,34 +10,38 @@ Features:
 
 Login at https://console.cloud.google.com and create a kubernetes cluster. Use Ubuntu as the OS to gain access to required disk features.
 ```
-#setup gcloud command line tools
-https://cloud.google.com/sdk/docs/quickstarts
-https://cloud.google.com/kubernetes-engine/docs/quickstart
+# Setup gcloud command line tools
+# https://cloud.google.com/sdk/docs/quickstarts
+# https://cloud.google.com/kubernetes-engine/docs/quickstart
 
 # Authenticate kubectl with your new cluster
 gcloud container clusters get-credentials [clustername]
 
 # Deploy SSD Storage class for GKE
-kubectl create -f gke/ssd-storage.yml
+kubectl apply -f gke/ssd-storage.yml
 ```
 
 ## Deploy Core Services
 ```
 # Create RPC Secret
-./scripts/generateRPCSecret.sh | kubectl create -f -
+./scripts/generateRPCSecret.sh | kubectl apply -f -
 
 # these services may take hours or days to initialize
-kubectl create -f deployment/bitcoin.yml
-kubectl create -f deployment/bitcoin-abc.yml
-kubectl create -f deployment/litecoin.yml
+kubectl apply -f deployment/bitcoin.yml
+kubectl apply -f services/bitcoin.yml
 
+kubectl apply -f deployment/bitcoin-abc.yml
+kubectl apply -f services/bitcoin-abc.yml
+
+kubectl apply -f deployment/litecoin.yml
+kubectl apply -f services/litecoin.yml
 ```
 
 ## Deploy the Mongo cluster
 ```
 # Create a 3 node replica set
-kubectl create -f deployment/mongodb.yml
-kubectl create -f services/mongodb.yml
+kubectl apply -f deployment/mongodb.yml
+kubectl apply -f services/mongodb.yml
 
 # connect to mongo shell in container mongo-0
 kubectl exec -it mongo-0 mongo
@@ -66,13 +70,13 @@ As of version Ambassador 0.50.0 ...
 
 ```
 # RBAC fix for GKE
-kubectl create clusterrolebinding my-cluster-admin-binding --clusterrole=cluster-admin --user=$(gcloud info --format="value(config.account)")
+kubectl apply clusterrolebinding my-cluster-admin-binding --clusterrole=cluster-admin --user=$(gcloud info --format="value(config.account)")
 
 # Install Ambassador
 kubectl apply -f https://getambassador.io/yaml/ambassador/ambassador-rbac.yaml
 
 # Create cert-manager namespace
-kubectl create namespace cert-manager
+kubectl apply namespace cert-manager
 
 # Disable resource validation on the cert-manager namespace
 kubectl label namespace cert-manager certmanager.k8s.io/disable-validation=true
@@ -88,12 +92,10 @@ kubectl apply -f cert-manager/letsencrypt.yml
 
 # Create Certificate Resource
 kubectl apply -f cert-manager/certificate.yml
-```
 
-## ACME Challenge setup
- `/.well-known/acme-challenge` - This route allows the ACME http01 verification to check ownership of the domain.
+# ACME Challenge setup
+# The steps below add the route `/.well-known/acme-challenge` - This route allows the ACME http01 verification to check ownership of the domain.
 
-```
 #### 1. Obtain ACME domain and token
 # After applying the last 2 YAML manifests, you will notice that cert-manager has spun up a temporary pod named cm-acme-http-solver-xxxx but no certificate has been issued. These values show as labels on the GKE container.
 
@@ -107,27 +109,69 @@ kubectl get secrets
 kubectl patch service ambassador -p "{\"metadata\":{\"annotations\":{\"date\":\"`date +'%s'`\",\"getambassador.io/config\":\"---\\napiVersion: ambassador/v0\\nkind:  Module\\nname:  tls\\nconfig:\\n  server:\\n    enabled: True\\n    redirect_cleartext_from: 80\\n\"}},\"spec\":{\"ports\":[{\"name\":\"http\",\"port\":80,\"protocol\":\"TCP\",\"targetPort\":80},{\"name\":\"https\",\"port\":443,\"protocol\":\"TCP\",\"targetPort\":443}]}}"
 ```
 
-## Deploy common services
+## Deploy rate service
+The OWStack rate service maintains an in-memory copy of the orderbooks from multiple exchanges and can combine them into a virtual orderbook at query time.
 
 ```
 # Setup OER Rate Service https://openexchangerates.org/signup/free
-./scripts/addOERApiKey.sh REPLACEWITHYOURAPIKEY | kubectl create -f -
+./scripts/addOERApiKey.sh REPLACEWITHYOURAPIKEY | kubectl apply -f -
 
-kubectl create -f deployment/rates.yml
-kubectl create -f services/rates.yml
+# /api/rates
+kubectl apply -f deployment/rates.yml
+kubectl apply -f services/rates.yml
+```
 
-# WIP: Explorer APIs...
+## Deploy blockchain explorer APIs
+```
+# /api/explorer/btc
+kubectl apply -f deployment/btc-explorer-api.yml
+kubectl apply -f services/btc-explorer-api.yml
+
+# /api/explorer/bch
+kubectl apply -f deployment/bch-explorer-api.yml
+kubectl apply -f services/bch-explorer-api.yml
+
+# /api/explorer/ltc
+kubectl apply -f deployment/ltc-explorer-api.yml
+kubectl apply -f services/ltc-explorer-api.yml
+```
+
+## Deploy blockchain explorer UIs
+```
+# /explorer/btc
+kubectl apply -f deployment/btc-explorer-ui.yml
+kubectl apply -f services/btc-explorer-ui.yml
+
+# /explorer/bch
+kubectl apply -f deployment/bch-explorer-ui.yml
+kubectl apply -f services/bch-explorer-ui.yml
+
+# /explorer/ltc
+kubectl apply -f deployment/ltc-explorer-ui.yml
+kubectl apply -f services/ltc-explorer-ui.yml
 ```
 
 ## Deploy wallet services
 
 ```
-kubectl create -f deployment/wallet-service-chain-btc.yml
-kubectl create -f deployment/wallet-service-chain-bch.yml
-kubectl create -f deployment/wallet-service-chain-ltc.yml
+# blockchain monitors for wallets
+kubectl apply -f deployment/wallet-service-chain-btc.yml
+kubectl apply -f deployment/wallet-service-chain-bch.yml
+kubectl apply -f deployment/wallet-service-chain-ltc.yml
 
-kubectl create -f deployment/wallet-service-locker.yml
-kubectl create -f deployment/wallet-service-messenger.yml
-kubectl create -f deployment/wallet-service-rates.yml
-kubectl create -f deployment/wallet-service-wallets.yml
+# rate monitor for wallets
+#Todo: split up per currency
+kubectl apply -f deployment/wallet-service-rates.yml
+
+# cluster lock service for wallets
+kubectl apply -f deployment/wallet-service-locker.yml
+kubectl apply -f services/wallet-service-locker.yml
+
+# cluster pub/sub for wallets
+kubectl apply -f deployment/wallet-service-messenger.yml
+kubectl apply -f services/wallet-service-messenger.yml
+
+# /api/ws
+kubectl apply -f deployment/wallet-service-wallets.yml
+kubectl apply -f services/wallet-service-wallets.yml
 ```

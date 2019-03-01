@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: btc-explorer-ui
+  labels:
+    app: btc-explorer-ui
+  annotations:
+    getambassador.io/config: |
+      ---
+      apiVersion: ambassador/v0
+      kind:  Mapping
+      name:  btc-explorer-ui_mapping
+      prefix: /explorer/btc/
+      rewrite: /
+      service: btc-explorer-ui:80
+
+spec:
+  ports:
+  - name: port-1
+    port: 80
+    protocol: TCP
+    targetPort: 3001
+  selector:
+    app: btc-explorer-ui
+  type: ClusterIP

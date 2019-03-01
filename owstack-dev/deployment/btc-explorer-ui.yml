@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: btc-explorer-ui
+  labels:
+    app: btc-explorer-ui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: btc-explorer-ui
+  template:
+    metadata:
+      labels:
+        app: btc-explorer-ui
+    spec:
+      containers:
+      - image: registry.hub.docker.com/owstack/ows-explorer:v1.0.0
+        name: btc-explorer-ui
+        env:
+        - name: PROXY_PATH
+          value: /explorer/btc
+        - name: EXPLORER_API_URL
+          value: https://dev.owstack.org
+        - name: EXPLORER_API_PROXY_PATH
+          value: /api/explorer/btc
+        command: ["npm", "start"]
+        ports:
+        - containerPort: 3000
