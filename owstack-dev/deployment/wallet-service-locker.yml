@@ -15,7 +15,7 @@ spec:
         app: wallet-service-locker
     spec:
       containers:
-      - image: registry.hub.docker.com/owstack/wallet-service:v0.1.1
+      - image: registry.hub.docker.com/owstack/wallet-service:v0.2.4
         name: wallet-service-locker
         command: ["node", "base-service/locker/locker.js"]
         ports:

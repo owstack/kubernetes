@@ -15,7 +15,7 @@ spec:
         app: wallet-service-chain-bch
     spec:
       containers:
-      - image: registry.hub.docker.com/owstack/wallet-service:v0.1.1
+      - image: registry.hub.docker.com/owstack/wallet-service:v0.2.4
         name: wallet-service-chain-bch
         command: ["node", "bch-service/blockchainmonitor/blockchainmonitor.js"]
         env:
