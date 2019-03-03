@@ -18,7 +18,7 @@ spec:
       - image: registry.hub.docker.com/owstack/litecoin:0.16.3.0-ows
         name: litecoin
         command: ["litecoind"]
-        args: ["-addresstype=legacy", "-datadir=/data", "-server=1", "-addressindex=1", "-spentindex=1", "-timestampindex=1", "-txindex=1", "-zmqpubrawtx=tcp://0.0.0.0:28332", "-zmqpubhashblock=tcp://0.0.0.0:28332", "-rpcallowip=0.0.0.0/0", "-rpcuser=$(RPCUSERNAME)", "-rpcpassword=$(RPCPASSWORD)", "-dbcache=512", "-rpcthreads=32", "-rest=1", "-printtoconsole"]
+        args: ["-addresstype=p2sh-segwit", "-datadir=/data", "-server=1", "-addressindex=1", "-spentindex=1", "-timestampindex=1", "-txindex=1", "-zmqpubrawtx=tcp://0.0.0.0:28332", "-zmqpubhashblock=tcp://0.0.0.0:28332", "-rpcallowip=0.0.0.0/0", "-rpcuser=$(RPCUSERNAME)", "-rpcpassword=$(RPCPASSWORD)", "-dbcache=512", "-rpcthreads=32", "-rest=1", "-printtoconsole"]
         ports:
         - containerPort: 9332
         - containerPort: 9333

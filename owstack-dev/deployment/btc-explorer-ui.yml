@@ -15,7 +15,7 @@ spec:
         app: btc-explorer-ui
     spec:
       containers:
-      - image: registry.hub.docker.com/owstack/ows-explorer:v1.0.0
+      - image: registry.hub.docker.com/owstack/explorer:v1.0.7
         name: btc-explorer-ui
         env:
         - name: PROXY_PATH

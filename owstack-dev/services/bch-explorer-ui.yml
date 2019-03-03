@@ -10,7 +10,7 @@ metadata:
       apiVersion: ambassador/v0
       kind:  Mapping
       name:  bch-explorer-ui_mapping
-      prefix: /explorer/bch/
+      prefix: /explorer/bch
       rewrite: /
       service: bch-explorer-ui:80
 
@@ -19,7 +19,7 @@ spec:
   - name: port-1
     port: 80
     protocol: TCP
-    targetPort: 3001
+    targetPort: 3000
   selector:
     app: bch-explorer-ui
   type: ClusterIP
