@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wallet-service-notify-email
+  labels:
+    app: wallet-service-notify-email
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: wallet-service-notify-email
+  template:
+    metadata:
+      labels:
+        app: wallet-service-notify-email
+    spec:
+      containers:
+      - image: registry.hub.docker.com/owstack/wallet-service:v0.2.6
+        name: wallet-service-notify-email
+        command: ["node", "base-service/ws.js"]
+        env:
+        - name: DB_CONN_STRING
+          value: mongodb://mongo-0.mongo:27017,mongo-1.mongo:27017,mongo-2.mongo:27017/wallet-service?replicaSet=rs0
+        - name: MESSAGE_BROKER_URL
+          value: http://wallet-service-messenger:3380
+        - name: LOCKER_SERVER_NAME
+          value: wallet-service-locker
+        - name: EMAIL_EXPLORER_URL_TEMPLATE
+          value: https://dev.owstack.org/explorer/{{currency}}/tx/{{txid}}
+        - name: SENDGRID_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: sendgridkey
+              key: sendgridkey

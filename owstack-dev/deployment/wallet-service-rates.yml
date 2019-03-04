@@ -15,7 +15,7 @@ spec:
         app: wallet-service-rates
     spec:
       containers:
-      - image: registry.hub.docker.com/owstack/wallet-service:v0.2.4
+      - image: registry.hub.docker.com/owstack/wallet-service:v0.2.5
         name: wallet-service-rates
         command: ["node", "base-service/fiatrateservice/fiatrateservice.js"]
         env:

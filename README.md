@@ -174,4 +174,12 @@ kubectl apply -f services/wallet-service-messenger.yml
 # /api/ws
 kubectl apply -f deployment/wallet-service-wallets.yml
 kubectl apply -f services/wallet-service-wallets.yml
+
+# Sendgrid Email Notifications
+./scripts/addSendgridApiKey.sh REPLACEWITHYOURAPIKEY | kubectl apply -f -
+kubectl apply -f deployments/wallet-service-email.yml
+
+# Google FCM Push Notifications
+./scripts/addGoogleFCMKey.sh REPLACEWITHYOURAPIKEY | kubectl apply -f -
+kubectl apply -f deployments/wallet-service-push.yml
 ```
