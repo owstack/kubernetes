@@ -13,6 +13,7 @@ metadata:
       prefix: /api/explorer/ltc/
       rewrite: /
       service: ltc-explorer-api:80
+      timeout_ms: 10000
       use_websocket: true
       cors:
         origins: "*"

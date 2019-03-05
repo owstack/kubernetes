@@ -13,6 +13,8 @@ metadata:
       prefix: /api/ws
       rewrite: /ws/api
       service: wallet-service-wallets:3232
+      timeout_ms: 10000
+      use_websocket: true
       cors:
         origins: "*"
         headers: x-signature,x-identity,x-session,x-client-version,x-wallet-id,X-Requested-With,Content-Type,Authorization
@@ -26,3 +28,4 @@ spec:
   selector:
     app: wallet-service-wallets
   type: ClusterIP
+  sessionAffinity: ClientIP
