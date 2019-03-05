@@ -74,6 +74,7 @@ kubectl apply clusterrolebinding my-cluster-admin-binding --clusterrole=cluster-
 
 # Install Ambassador
 kubectl apply -f https://getambassador.io/yaml/ambassador/ambassador-rbac.yaml
+kubectl apply -f services/ambassador.yml
 
 # Create cert-manager namespace
 kubectl apply namespace cert-manager
