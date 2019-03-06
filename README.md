@@ -74,10 +74,12 @@ kubectl apply clusterrolebinding my-cluster-admin-binding --clusterrole=cluster-
 
 # Install Ambassador
 kubectl apply -f https://getambassador.io/yaml/ambassador/ambassador-rbac.yaml
+
+# Create Loadbalancer for Ambassador, use this public IP for DNS entry for your domain
 kubectl apply -f services/ambassador.yml
 
 # Create cert-manager namespace
-kubectl apply namespace cert-manager
+kubectl create namespace cert-manager
 
 # Disable resource validation on the cert-manager namespace
 kubectl label namespace cert-manager certmanager.k8s.io/disable-validation=true
@@ -161,7 +163,6 @@ kubectl apply -f deployment/wallet-service-chain-bch.yml
 kubectl apply -f deployment/wallet-service-chain-ltc.yml
 
 # rate monitor for wallets
-#Todo: split up per currency
 kubectl apply -f deployment/wallet-service-rates.yml
 
 # cluster lock service for wallets
