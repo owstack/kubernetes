@@ -9,7 +9,7 @@ Features:
 ## GKE Setup
 
 Login at https://console.cloud.google.com and create a kubernetes cluster. Use Ubuntu as the OS to gain access to required disk features.
-```
+```sh
 # Setup gcloud command line tools
 # https://cloud.google.com/sdk/docs/quickstarts
 # https://cloud.google.com/kubernetes-engine/docs/quickstart
@@ -22,7 +22,7 @@ kubectl apply -f gke/ssd-storage.yml
 ```
 
 ## Deploy Core Services
-```
+```sh
 # Create RPC Secret
 ./scripts/generateRPCSecret.sh | kubectl apply -f -
 
@@ -38,14 +38,15 @@ kubectl apply -f services/litecoin.yml
 ```
 
 ## Deploy the Mongo cluster
-```
+```sh
 # Create a 3 node replica set
 kubectl apply -f deployment/mongodb.yml
 kubectl apply -f services/mongodb.yml
 
 # connect to mongo shell in container mongo-0
 kubectl exec -it mongo-0 mongo
-
+```
+```javascript
 >   rs.initiate(
         {
             _id: "rs0",
@@ -68,7 +69,7 @@ Ambassador integrates with kubernetes so that deployments can all appear behind 
 
 As of version Ambassador 0.50.0 ...
 
-```
+```sh
 # RBAC fix for GKE
 kubectl apply clusterrolebinding my-cluster-admin-binding --clusterrole=cluster-admin --user=$(gcloud info --format="value(config.account)")
 
@@ -115,7 +116,7 @@ kubectl patch service ambassador -p "{\"metadata\":{\"annotations\":{\"date\":\"
 ## Deploy rate service
 The OWStack rate service maintains an in-memory copy of the orderbooks from multiple exchanges and can combine them into a virtual orderbook at query time.
 
-```
+```sh
 # Setup OER Rate Service https://openexchangerates.org/signup/free
 ./scripts/addOERApiKey.sh REPLACEWITHYOURAPIKEY | kubectl apply -f -
 
@@ -125,7 +126,7 @@ kubectl apply -f services/rates.yml
 ```
 
 ## Deploy blockchain explorer APIs
-```
+```sh
 # /api/explorer/btc
 kubectl apply -f deployment/btc-explorer-api.yml
 kubectl apply -f services/btc-explorer-api.yml
@@ -140,7 +141,7 @@ kubectl apply -f services/ltc-explorer-api.yml
 ```
 
 ## Deploy blockchain explorer UIs
-```
+```sh
 # /explorer/btc
 kubectl apply -f deployment/btc-explorer-ui.yml
 kubectl apply -f services/btc-explorer-ui.yml
@@ -156,7 +157,7 @@ kubectl apply -f services/ltc-explorer-ui.yml
 
 ## Deploy wallet services
 
-```
+```sh
 # blockchain monitors for wallets
 kubectl apply -f deployment/wallet-service-chain-btc.yml
 kubectl apply -f deployment/wallet-service-chain-bch.yml
