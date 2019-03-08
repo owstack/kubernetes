@@ -15,7 +15,7 @@ spec:
         app: bch-explorer-api
     spec:
       containers:
-      - image: registry.hub.docker.com/owstack/explorer-api:v1.0.24
+      - image: registry.hub.docker.com/owstack/explorer-api:v1.0.26
         name: bch-explorer-api
         env:
         - name: CURRENCY
