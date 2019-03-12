@@ -15,7 +15,7 @@ spec:
         app: wallet-service-notify-email
     spec:
       containers:
-      - image: registry.hub.docker.com/owstack/wallet-service:v0.2.6
+      - image: registry.hub.docker.com/owstack/wallet-service:v0.2.8
         name: wallet-service-notify-email
         command: ["node", "base-service/ws.js"]
         env:

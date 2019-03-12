@@ -15,7 +15,7 @@ spec:
         app: wallet-service-chain-btc
     spec:
       containers:
-      - image: registry.hub.docker.com/owstack/wallet-service:v0.2.4
+      - image: registry.hub.docker.com/owstack/wallet-service:v0.2.8
         name: wallet-service-chain-btc
         command: ["node", "btc-service/blockchainmonitor/blockchainmonitor.js"]
         env:
@@ -25,3 +25,7 @@ spec:
           value: http://wallet-service-messenger:3380
         - name: LOCKER_SERVER_NAME
           value: wallet-service-locker
+        - name: BTC_LIVENET_EXPLORER_API
+          value: http://btc-explorer-api
+        - name: BTC_LIVENET_EXPLORER_API_PATH
+          value: ""
