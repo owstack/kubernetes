@@ -25,7 +25,7 @@ spec:
                     - rate-service
               topologyKey: "kubernetes.io/hostname"
       containers:
-      - image: registry.hub.docker.com/owstack/rate-service:v1.1.8
+      - image: registry.hub.docker.com/owstack/rate-service:v1.1.9
         name: rate-service
         env:
         - name: OER_APP_ID
